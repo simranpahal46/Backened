@@ -1,8 +1,9 @@
 import user_model from '../model/user_model.js'
 import { Validname, Validemail, Validpassword } from '../validation/user_validation.js'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 
-export const create_user = async(req, res) => {
+export const create_user = async (req, res) => {
     try {
 
         const data = req.body
@@ -18,14 +19,24 @@ export const create_user = async(req, res) => {
         if (!password) return res.status(400).send({ status: false, msg: "password is required" })
 
         const bcryptPassword = await bcrypt.hash(password, 10)
-        data.password=bcryptPassword
+        data.password = bcryptPassword
 
-        const Check_User= await user_model.findOne({email:email})
-        if(Check_User) return res.status(400).status({status:false,msg:"email already exist"})
+        const Check_User = await user_model.findOne({ email: email })
+        if (Check_User) return res.status(400).status({ status: false, msg: "email already exist" })
 
-            const DB=await user_model.create(data)
+        const randomotp = crypto.randomInt(1000, 10000)
+        const expirydate = Date.now() + 1000 * 60 * 5
+        data.validation = {
+            user: {
+                userotp: randomotp,
+                otpexpire: expirydate
+            }
+        }
 
-        res.send({status:true,msg:"user create sucessfully",data:DB})
+
+        const DB = await user_model.create(data)
+
+        res.send({ status: true, msg: "user create sucessfully", data: DB })
     }
     catch (e) {
         res.status(500).send({ status: false, msg: e.message })

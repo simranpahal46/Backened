@@ -11,7 +11,7 @@ const User_Schema=new mongoose.Schema({
             isDelete:{type:Boolean,default:false},
             isvarification:{type:Boolean,default:false},
             userotp:{type:Number,default:null},
-            otpexpire:{type:Date,default:null},
+            otpexpire:{type:Number,default:null},
             blocktype:{type:String,enum:['delete','block','unblock'],default:'unblock'}
         },
         admin:{
