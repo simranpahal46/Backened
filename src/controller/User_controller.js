@@ -2,6 +2,7 @@ import user_model from '../model/user_model.js'
 import { Validname, Validemail, Validpassword } from '../validation/user_validation.js'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
+import {EmailOtp} from '../mail/user_mail.js'
 
 export const create_user = async (req, res) => {
     try {
@@ -17,21 +18,23 @@ export const create_user = async (req, res) => {
         if (!name) return res.status(400).send({ status: false, msg: "name is required" })
         if (!email) return res.status(400).send({ status: false, msg: "email is required" })
         if (!password) return res.status(400).send({ status: false, msg: "password is required" })
+            EmailOtp(email,name,9876)
 
         const bcryptPassword = await bcrypt.hash(password, 10)
         data.password = bcryptPassword
+        
 
         const Check_User = await user_model.findOne({ email: email })
         if (Check_User) return res.status(400).status({ status: false, msg: "email already exist" })
 
-        const randomotp = crypto.randomInt(1000, 10000)
-        const expirydate = Date.now() + 1000 * 60 * 5
-        data.validation = {
-            user: {
-                userotp: randomotp,
-                otpexpire: expirydate
-            }
-        }
+        // const randomotp = crypto.randomInt(1000, 10000)
+        // const expirydate = Date.now() + 1000 * 60 * 5
+        // data.validation = {
+        //     user: {
+        //         userotp: randomotp,
+        //         otpexpire: expirydate
+        //     }
+        // }
 
 
         const DB = await user_model.create(data)
