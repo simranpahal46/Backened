@@ -25,3 +25,7 @@ export const EmailOtp = async (email, name, otp) => {
     }
     catch (err) { console.log(err.message) }
 }
+
+export const resent_otp=(email,name,otp)=>{
+console.log(email,name,otp)
+}
