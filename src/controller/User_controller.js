@@ -2,7 +2,7 @@ import user_model from '../model/user_model.js'
 import { Validname, Validemail, Validpassword } from '../validation/user_validation.js'
 // import bcrypt from 'bcrypt'
 // import crypto from 'crypto'
-import { EmailOtp , resent_otp} from '../mail/user_mail.js'
+import { EmailOtp, resent_otp } from '../mail/user_mail.js'
 
 export const create_user = async (req, res) => {
     try {
@@ -21,23 +21,26 @@ export const create_user = async (req, res) => {
         if (!password) return res.status(400).send({ status: false, msg: "password is required" })
         if (!Validpassword) return res.status(400).send({ status: false, msg: "Password is invalid" })
 
+
+        const Check_User = await user_model.findOne({ email: email })
+        if (Check_User) {
+
+            const { isDelete, block, isvarification } = Check_User.validation.user
+            if (isDelete) return res.status(400).send({ status: false, msg: "account delete" })
+
+            if (block) return res.status(400).send({ status: false, msg: "account false" })
+
+            if (isvarification) return res.status(400).send({ status: false, msg: "account verify please login" })
+            resent_otp(email, name, 1900)
             
-            const Check_User = await user_model.findOne({ email: email })
-            if (Check_User) {
+            return res.status(400).status({ status: false, msg: "email already exist" })
+        }
 
-                const {isDelete,block,isvarification}=Check_User.validation.user
-                if(isDelete) return res.status(400).send({status:false,msg:"account delete"})
-                if(block) return res.status(400).send({status:false,msg:"account false"})
-                if(isvarification) return res.status(400).send({status:false,msg:"account verify please login"})
-                   resent_otp(email,name,1900)
-                    return res.status(400).status({ status: false, msg: "email already exist" })
-            }
-
-            EmailOtp(email,name,8080)
+        EmailOtp(email, name, 8080)
 
         // const bcryptPassword = await bcrypt.hash(password, 10)
         // data.password = bcryptPassword
-        
+
         // const randomotp = crypto.randomInt(1000, 10000)
         // const expirydate = Date.now() + 1000 * 60 * 5
         // data.validation = {
