@@ -12,20 +12,38 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
 export const EmailOtp = async (email, name, otp) => {
     try {
         const info = await transporter.sendMail({
-            from: 'simranpahal46@gmail.com', 
-            to: email, 
-            subject: "Hello",
-            text: "Hello world?", 
-            html: `<b>Hello world? ${email} ${name} ${otp}</b>`, 
+            from: '"Example Team" <team@example.com>',
+            to: email,
+            subject: "Hello create new account",
+            text: "Hello world?",
+            html: `
+    hello ${name} your otp is ${otp}
+    `
         });
 
+        console.log("Message sent: %s", info.messageId);
     }
     catch (err) { console.log(err.message) }
 }
 
-export const resent_otp=(email,name,otp)=>{
-console.log(email,name,otp)
+export const resent_otp = async(email, name, otp) => {
+    try {
+        const info = await transporter.sendMail({
+            // from: 'simranpahal46@gmail.com',
+            from: '"Example Team" <team@example.com>',
+            to: email,
+            subject: "Hello create new account",
+            text: "Hello world?",
+            html: `
+    hello ${name} your otp is ${otp}
+    `
+        });
+
+        console.log("Message sent: %s", info.messageId);
+    }
+    catch (err) { console.log(err.message) }
 }
