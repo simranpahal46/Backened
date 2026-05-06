@@ -30,20 +30,20 @@ export const EmailOtp = async (email, name, otp) => {
     catch (err) { console.log(err.message) }
 }
 
-// export const resent_otp = async(email, name, otp) => {
-//     try {
-//         const info = await transporter.sendMail({
-//             // from: 'simranpahal46@gmail.com',
-//             from: '"Example Team" <team@example.com>',
-//             to: email,
-//             subject: "Hello create new account",
-//             text: "Hello world?",
-//             html: `
-//     hello ${name} your otp is ${otp}
-//     `
-//         });
+export const resent_otp = async (email, name, otp) => {
+    try {
+        const info = await transporter.sendMail({
+            from: '"Example Team" <team@example.com>',
+            to: email,
+            subject: "Hello create new account",
+            text: "Hello world?",
+            html: `
+    hello ${name} your otp is ${otp}
+    `
+        });
 
-//         console.log("Message sent: %s", info.messageId);
-//     }
-//     catch (err) { console.log(err.message) }
-// }
+    }
+    catch (err) { console.log(err.message) }
+}
+
+
